@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MissColle｜ミスを集めて、苦手をなくす</title><style>
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f7fb;color:#19283b;margin:0}main{max-width:680px;margin:auto;padding:18px}h1{margin-bottom:0;color:#2252a3}.sub{margin-top:5px;color:#627187}section{background:white;padding:18px;margin:16px 0;border-radius:16px;box-shadow:0 2px 10px #172b4d10}button,.pick{display:inline-block;border:0;border-radius:10px;padding:12px 16px;background:#235bc3;color:white;font-size:16px;cursor:pointer;margin:5px 5px 5px 0}button.secondary{background:#e8eef9;color:#204b92}input,textarea,select{font:inherit;padding:10px;border:1px solid #cad3df;border-radius:8px;box-sizing:border-box;max-width:100%}textarea{width:100%;min-height:115px}label{display:block;margin:10px 0}img{max-width:100%;max-height:420px;border-radius:8px}.item{padding:12px;border-top:1px solid #e5eaf2}.small{font-size:13px;color:#69798d}.hidden{display:none}.q{font-size:22px;font-weight:bold}#status{white-space:pre-wrap}</style></head><body><main><h1>MissColle <small>ミスコレ</small></h1><p class="sub">ミスを集めて、苦手をなくす。</p>
-<section><h2>① テストを撮影・読み取り</h2><p>カメラで撮影、または写真を選択してください。画像はこの端末で処理します。</p><label class="pick" for="cameraPhoto">📷 カメラで撮影</label><input id="cameraPhoto" type="file" accept="image/*" capture="environment" class="hidden"><label class="pick" for="libraryPhoto">🖼️ 写真・ファイルから選択</label><input id="libraryPhoto" type="file" accept="image/*" class="hidden"><div><img id="preview" alt="選択した写真" class="hidden"></div><div id="imageTools" class="hidden"><p><button class="secondary" id="left">↶ 左90°</button><button class="secondary" id="right">↷ 右90°</button></p><label>文字の方向 <select id="direction"><option value="auto" selected>自動判定</option><option value="vertical">縦書き</option><option value="horizontal">横書き</option></select></label><label><input type="checkbox" id="enhance" checked> コントラスト補正（印刷文字向け）</label><p class="small">縦書きは日本語縦書き学習モデルを使用。自動判定は縦書きと横書きの両方を認識して比較します。文字の配置は必ず確認してください。</p></div><button id="ocr">写真から文字を読み取る</button><p id="status" class="small">※文字認識には初回インターネット接続が必要です。手書きや赤ペンの採点は正確に判定できないことがあります。</p><label>読み取った文字（編集できます）<textarea id="recognized" placeholder="例：けいざい　経済"></textarea></label><button class="secondary" id="split">行ごとに登録候補を作る</button></section>
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f7fb;color:#19283b;margin:0}main{max-width:680px;margin:auto;padding:18px}h1{margin-bottom:0;color:#2252a3}.sub{margin-top:5px;color:#627187}section{background:white;padding:18px;margin:16px 0;border-radius:16px;box-shadow:0 2px 10px #172b4d10}button,.pick{display:inline-block;border:0;border-radius:10px;padding:12px 16px;background:#235bc3;color:white;font-size:16px;cursor:pointer;margin:5px 5px 5px 0}button.secondary{background:#e8eef9;color:#204b92}input,textarea,select{font:inherit;padding:10px;border:1px solid #cad3df;border-radius:8px;box-sizing:border-box;max-width:100%}textarea{width:100%;min-height:115px}label{display:block;margin:10px 0}img{max-width:100%;max-height:420px;border-radius:8px}#cropCanvas{width:100%;height:auto;display:block;touch-action:none;border-radius:8px;border:1px solid #cad3df;box-sizing:border-box}#cropPanel{margin-top:12px}#cropHint{font-size:13px;color:#627187}.item{padding:12px;border-top:1px solid #e5eaf2}.small{font-size:13px;color:#69798d}.hidden{display:none}.q{font-size:22px;font-weight:bold}#status{white-space:pre-wrap}</style></head><body><main><h1>MissColle <small>ミスコレ</small></h1><p class="sub">ミスを集めて、苦手をなくす。</p>
+<section><h2>① テストを撮影・読み取り</h2><p>カメラで撮影、または写真を選択してください。画像はこの端末で処理します。</p><label class="pick" for="cameraPhoto">📷 カメラで撮影</label><input id="cameraPhoto" type="file" accept="image/*" capture="environment" class="hidden"><label class="pick" for="libraryPhoto">🖼️ 写真・ファイルから選択</label><input id="libraryPhoto" type="file" accept="image/*" class="hidden"><div><img id="preview" alt="選択した写真" class="hidden"></div><div id="cropPanel" class="hidden"><p><strong>読み取り範囲を選択</strong></p><p id="cropHint">画像上を指でなぞって、読み取りたいページや問題部分を囲んでください。</p><canvas id="cropCanvas"></canvas><p><button class="secondary" id="resetCrop">範囲をリセット</button><button class="secondary" id="fullCrop">画像全体を選択</button></p></div><div id="imageTools" class="hidden"><p><button class="secondary" id="left">↶ 左90°</button><button class="secondary" id="right">↷ 右90°</button></p><label>文字の方向 <select id="direction"><option value="auto" selected>自動判定</option><option value="vertical">縦書き</option><option value="horizontal">横書き</option></select></label><label><input type="checkbox" id="enhance" checked> コントラスト補正（印刷文字向け）</label><p class="small">縦書きは日本語縦書き学習モデルを使用。自動判定は縦書きと横書きの両方を認識して比較します。文字の配置は必ず確認してください。</p></div><button id="ocr">写真から文字を読み取る</button><p id="status" class="small">※文字認識には初回インターネット接続が必要です。手書きや赤ペンの採点は正確に判定できないことがあります。</p><label>読み取った文字（編集できます）<textarea id="recognized" placeholder="例：けいざい　経済"></textarea></label><button class="secondary" id="split">行ごとに登録候補を作る</button></section>
 <section><h2>② 問題を確認・登録</h2><p class="small">OCR結果は必ず確認してください。問題と正解を修正してから登録します。</p><label>問題 <input id="question" placeholder="けいざい / りんご"></label><label>正解 <input id="answer" placeholder="経済 / apple"></label><label>初期状態 <select id="level"><option value="3">苦手（間違えた）</option><option value="1">復習（正解した）</option></select></label><button id="add">問題を登録</button><div id="candidates"></div></section>
 <section><h2>③ 自分専用の単語帳</h2><p id="count"></p><div id="items"></div><button class="secondary" id="print">A4で印刷</button></section>
-<section><h2>④ 復習クイズ</h2><button id="next">次の問題</button><p id="quizQuestion" class="q"></p><button id="reveal" class="secondary">正解を見る</button><p id="quizAnswer"></p><div id="grade" class="hidden"><button id="wrong">まだ苦手</button><button id="right" class="secondary">できた！</button></div></section><p class="small">試作品 Ver.0.5。データはこのブラウザ内に保存されます。Safariのデータを消すと失われる場合があります。個人情報が含まれる写真は公開リポジトリにアップロードしないでください。</p></main>
+<section><h2>④ 復習クイズ</h2><button id="next">次の問題</button><p id="quizQuestion" class="q"></p><button id="reveal" class="secondary">正解を見る</button><p id="quizAnswer"></p><div id="grade" class="hidden"><button id="wrong">まだ苦手</button><button id="right" class="secondary">できた！</button></div></section><p class="small">試作品 Ver.0.6。データはこのブラウザ内に保存されます。Safariのデータを消すと失われる場合があります。個人情報が含まれる写真は公開リポジトリにアップロードしないでください。</p></main>
 <script>
 const $=id=>document.getElementById(id);let cards=[];try{cards=JSON.parse(localStorage.getItem('misscolle-cards')||'[]')}catch{};let current=null;const save=()=>{localStorage.setItem('misscolle-cards',JSON.stringify(cards));render()};function render(){$('count').textContent=cards.length+'問登録済み';$('items').innerHTML='';cards.forEach((c,i)=>{let d=document.createElement('div');d.className='item';let t=document.createElement('span');t.textContent=c.q+' → '+c.a+'　（苦手度 '+c.level+'）';let b=document.createElement('button');b.className='secondary';b.textContent='削除';b.onclick=()=>{if(confirm('削除しますか？')){cards.splice(i,1);save()}};d.append(t,b);$('items').append(d)})}render();
 
-let sourceImage=null,rotation=0,objectURL=null;
+let sourceImage=null,rotation=0,objectURL=null,crop=null,cropStart=null;
 function drawSource(){
  if(!sourceImage)return null;
  const vertical=Math.abs(rotation)%180===90;
@@ -20,7 +20,23 @@ function drawSource(){
  ctx.drawImage(sourceImage,-sw/2,-sh/2,sw,sh);
  return canvas;
 }
-function refreshPreview(){const c=drawSource();if(c){$('preview').src=c.toDataURL('image/jpeg',.9);$('preview').classList.remove('hidden')}}
+function refreshPreview(){const c=drawSource();if(c){$('preview').src=c.toDataURL('image/jpeg',.9);$('preview').classList.remove('hidden');$('preview').classList.add('hidden');$('cropPanel').classList.remove('hidden');renderCrop()}}
+function renderCrop(){
+ const src=drawSource();if(!src)return;
+ const canvas=$('cropCanvas'),limit=720,scale=Math.min(1,limit/src.width);
+ canvas.width=Math.max(1,Math.round(src.width*scale));canvas.height=Math.max(1,Math.round(src.height*scale));
+ const ctx=canvas.getContext('2d');ctx.drawImage(src,0,0,canvas.width,canvas.height);
+ if(crop){const x=crop.x*canvas.width,y=crop.y*canvas.height,w=crop.w*canvas.width,h=crop.h*canvas.height;
+ ctx.fillStyle='rgba(0,0,0,.28)';ctx.fillRect(0,0,canvas.width,y);ctx.fillRect(0,y,x,h);ctx.fillRect(x+w,y,canvas.width-x-w,h);ctx.fillRect(0,y+h,canvas.width,canvas.height-y-h);
+ ctx.strokeStyle='#1677ff';ctx.lineWidth=3;ctx.strokeRect(x,y,w,h)}
+}
+function cropPoint(event){const rect=$('cropCanvas').getBoundingClientRect();return {x:Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width)),y:Math.max(0,Math.min(1,(event.clientY-rect.top)/rect.height))}}
+$('cropCanvas').addEventListener('pointerdown',e=>{if(!sourceImage)return;e.preventDefault();$('cropCanvas').setPointerCapture(e.pointerId);cropStart=cropPoint(e);crop={x:cropStart.x,y:cropStart.y,w:0,h:0};renderCrop()});
+$('cropCanvas').addEventListener('pointermove',e=>{if(!cropStart)return;e.preventDefault();const p=cropPoint(e);crop={x:Math.min(cropStart.x,p.x),y:Math.min(cropStart.y,p.y),w:Math.abs(p.x-cropStart.x),h:Math.abs(p.y-cropStart.y)};renderCrop()});
+function endCrop(){if(crop&&(crop.w<.015||crop.h<.015))crop=null;cropStart=null;renderCrop()}
+$('cropCanvas').addEventListener('pointerup',endCrop);$('cropCanvas').addEventListener('pointercancel',endCrop);
+$('resetCrop').onclick=()=>{crop=null;renderCrop()};$('fullCrop').onclick=()=>{crop=null;renderCrop()};
+
 async function loadPhoto(e){
  const f=e.target.files[0];if(!f)return;
  if(objectURL)URL.revokeObjectURL(objectURL);
@@ -28,15 +44,16 @@ async function loadPhoto(e){
  const img=new Image();
  try{await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=objectURL})}
  catch{$('status').textContent='画像を開けませんでした。JPEGまたはPNGを試してください。';return}
- sourceImage=img;rotation=0;$('imageTools').classList.remove('hidden');refreshPreview();
+ sourceImage=img;rotation=0;crop=null;$('imageTools').classList.remove('hidden');refreshPreview();
  $('status').textContent='写真の上下を揃え、文字方向を選んで読み取ってください。';
 }
 $('cameraPhoto').onchange=loadPhoto;
 $('libraryPhoto').onchange=loadPhoto;
-$('left').onclick=()=>{rotation=(rotation+270)%360;refreshPreview()};
-$('right').onclick=()=>{rotation=(rotation+90)%360;refreshPreview()};
+$('left').onclick=()=>{rotation=(rotation+270)%360;crop=null;refreshPreview()};
+$('right').onclick=()=>{rotation=(rotation+90)%360;crop=null;refreshPreview()};
 function makeOCRImage(){
- const canvas=drawSource();if(!canvas)return null;
+ let canvas=drawSource();if(!canvas)return null;
+ if(crop&&crop.w>.015&&crop.h>.015){const x=Math.floor(crop.x*canvas.width),y=Math.floor(crop.y*canvas.height),w=Math.max(1,Math.floor(crop.w*canvas.width)),h=Math.max(1,Math.floor(crop.h*canvas.height));const part=document.createElement('canvas');part.width=w;part.height=h;part.getContext('2d').drawImage(canvas,x,y,w,h,0,0,w,h);canvas=part;}
  if($('enhance').checked){
   const ctx=canvas.getContext('2d',{willReadFrequently:true}),im=ctx.getImageData(0,0,canvas.width,canvas.height),p=im.data;
   // Red pen and pencil are intentionally not classified as answers.
